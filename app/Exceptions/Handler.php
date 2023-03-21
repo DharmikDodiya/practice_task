@@ -1,8 +1,13 @@
 <?php
 
 namespace App\Exceptions;
-
+use App\Models\Error;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Http;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -22,7 +27,8 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+        AuthorizationException::class,
+        HttpException::class,
     ];
 
     /**
@@ -41,8 +47,28 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function (Throwable $exception) {
+            // only create entries if app environment is not local
+            // if(!app()->environment('local'))
+            // {
+                $user_id = 1;
+ 
+                if (Auth::user()) {
+                    $user_id = Auth::user()->id;
+                }
+               
+                $data = array(
+                    'user_id'   => $user_id,
+                    'code'      => $exception->getCode(),
+                    'file'      => $exception->getFile(),
+                    'line'      => $exception->getLine(),
+                    'message'   => $exception->getMessage(),
+                    'trace'     => $exception->getTraceAsString(),
+                );
+               
+                Error::create($data);
+            // }
         });
+ 
     }
 }

@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
+use Whoops\Run;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +18,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+
+Route::controller(AuthController::class)->group(function(){
+    Route::post('/login','login');
+    Route::post('/register','register');
+    Route::get('/verifyuser/{token}','verifyAccount');
+    Route::post('/forget-password','forgetPassword');
+    Route::get('resetPassword','forgetPasswordView');
+    Route::post('reset-Password','resetPassword');
+});
+
+Route::middleware(['auth:api'])->group(function(){
+    
+    Route::controller(UserController::class)->prefix('user')->group(function(){
+        Route::get('list','list');
+        Route::get('/user-Profile',  'userProfile');
+        Route::post('/change-Password',  'changePassword');
+        Route::get('/logout','logout');
+    });
+   
 });
