@@ -46,7 +46,7 @@ class AuthController extends Controller
             return success('your email is verified now you can login');
         }
         else{
-            return NotSuccess('your email is already verified');
+            return error('your email is already verified',type:'notfound');
         }
     }
 
@@ -63,7 +63,7 @@ class AuthController extends Controller
             return success('you are Login Now',$token);
         }
         else{
-            return NotSuccess('email and password are not match');
+            return error('email and password are not match',type:'notfound');
         }   
 
     }
@@ -101,7 +101,7 @@ class AuthController extends Controller
 
             return success('send mail please check your mail',$token);
         }
-        return NotSuccess('Email Is Not Exists');
+        return error('Email Is Not Exists',type:'notfound');
     }
 
     public function forgetPasswordView(Request $request){
@@ -110,7 +110,7 @@ class AuthController extends Controller
         if(isset($resetdata)){
             return success('now you can chenge the password use this token',$request->token);
         }
-        return NotSuccess('you can Not Change The Password');
+        return error('you can Not Change The Password',type:'notfound');
     }
 
     public function resetPassword(Request $request){
@@ -127,7 +127,7 @@ class AuthController extends Controller
             $data->update(['token' => '']);
             return success('your password change successfully');
         }
-        return NotSuccess('your Token Is Expired');
+        return error('your Token Is Expired',type:'notfound');
     }
 
 

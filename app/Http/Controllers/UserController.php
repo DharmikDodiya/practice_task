@@ -23,7 +23,7 @@ class UserController extends Controller
         ]);
 
         if(!Hash::check($request->old_password, auth()->user()->password)){
-            return NotSuccess("error", "Old Password Doesn't match!");
+            return error("error", "Old Password Doesn't match!",type:'notfound');
         }
         User::whereId(auth()->user()->id)->update([
             'password'  =>Hash::make($request->new_password),
@@ -38,7 +38,7 @@ class UserController extends Controller
         if(isset($user)){
             return Success('user profile',$user);
         }
-        return NotSuccess('Not User Login');
+        return error('Not User Login',type:'notfound');
     }
 
     public function logout(){
