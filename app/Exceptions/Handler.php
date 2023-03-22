@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Exceptions;
-use App\Models\Error;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Http;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use App\Models\Error;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Auth\AuthenticationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -45,14 +46,11 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-    public function register(): void
+    public function register()
     {
-        $this->reportable(function (Throwable $exception) {
-            // only create entries if app environment is not local
-            // if(!app()->environment('local'))
-            // {
+        $this->reportable(function (Throwable $exception, $request) {
                 
-                $user_id = 0;
+                $user_id = 1;
  
                 if (Auth::user()) {
                     $user_id = Auth::user()->id;
@@ -67,8 +65,12 @@ class Handler extends ExceptionHandler
                     'trace'     => $exception->getTraceAsString(),
                 );
                
-                Error::create([$data]);
-            // }
+                Error::create($data);
+
+                if($exception instanceof AuthenticationException)
+                {
+                    return NotSuccess("Can't access this page without Login!!!");
+                }
         });
  
     }
