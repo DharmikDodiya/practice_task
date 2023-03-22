@@ -38,7 +38,7 @@ class UserController extends Controller
         if(isset($user)){
             return Success('user profile',$user);
         }
-        return error('Not User Login',type:'notfound');
+        return error('Not User Login',type:'unauthenticated');
     }
 
     public function logout(){
