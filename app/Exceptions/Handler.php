@@ -10,6 +10,7 @@ use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Spatie\FlareClient\Http\Exceptions\NotFound;
 
 class Handler extends ExceptionHandler
 {
@@ -28,8 +29,8 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        AuthorizationException::class,
-        HttpException::class,
+        //AuthorizationException::class,
+        //HttpException::class,
     ];
 
     /**
@@ -69,7 +70,11 @@ class Handler extends ExceptionHandler
 
                 if($exception instanceof AuthenticationException)
                 {
-                    return NotSuccess("Can't access this page without Login!!!");
+                    return error("not access this page without Login!!!",type:'unauthenticated');
+                }
+                else if($exception instanceof RouteNotFoundException)
+                {
+                    return error("not access this page without Login!!!",type:'notfound');
                 }
         });
  
