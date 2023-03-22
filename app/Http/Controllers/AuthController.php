@@ -29,6 +29,7 @@ class AuthController extends Controller
         ]);
 
         $user->notify(new WelcomeMessageNotification($user));
+    
 
         return success('you Are Register Now,send mail please verify your mail',$user);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmailQueueJob;
 use App\Models\User;
 use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
@@ -47,4 +48,6 @@ class UserController extends Controller
         return success('logged out');
     }
 
+
+   
 }
