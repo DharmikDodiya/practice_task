@@ -46,4 +46,5 @@ class UserController extends Controller
         $user->revoke();
         return success('logged out');
     }
+
 }
