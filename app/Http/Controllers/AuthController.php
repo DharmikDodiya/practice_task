@@ -32,7 +32,6 @@ class AuthController extends Controller
 
         $user->notify(new WelcomeMessageNotification($user));
         //Report::dispatch($user)->delay(now()->addSecond());
-
         return success('you Are Register Now,send mail please verify your mail',$user);
     }
 

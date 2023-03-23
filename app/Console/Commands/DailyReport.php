@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Console\Commands;
-
-use App\Jobs\Report;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;

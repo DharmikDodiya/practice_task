@@ -3,10 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\User;
-use App\Mail\DailyReportMail;
 use App\Notifications\WelcomeMessageNotification;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -32,6 +30,6 @@ class Report implements ShouldQueue
      */
     public function handle()
     {
-
+        $this->user->notify(new WelcomeMessageNotification($this->user));
     }
 }
