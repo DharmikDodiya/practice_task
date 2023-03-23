@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\User;
 use App\Mail\DailyReportMail;
+use App\Notifications\WelcomeMessageNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -17,12 +18,13 @@ class Report implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $user;
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct($user)
     {
-        //
+        $this->user = $user;
     }
 
     /**
@@ -30,15 +32,6 @@ class Report implements ShouldQueue
      */
     public function handle()
     {
-        $users = User::all();
 
-    
-        if ($users->count() > 0) {
-            foreach ($users as $user) {
-                // Mail::to($user->email)->send(new DailyReportMail($user));
-                Log::info($user);
-            }
-        }
-        return 0;
     }
 }

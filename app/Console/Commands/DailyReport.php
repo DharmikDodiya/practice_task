@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\Report;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -29,14 +30,16 @@ class DailyReport extends Command
      */
     public function handle()
     {
-        $users = User::all();
-
+        $usersmail = User::select('email')->get();
+        $emails =[];
     
-        if ($users->count() > 0) {
-            foreach ($users as $user) {
-                Mail::to($user->email)->send(new DailyReportMail($user));
+       
+            foreach ($usersmail as $email) {
+                $emails[] = $email['email']; 
             }
-        }
-        return 0;
+            Mail::send('dailyreport',[],function($message) use ($emails){
+                $message->to($emails)->subject('this is test for cron job daily report');
+            });
+        
     }
 }

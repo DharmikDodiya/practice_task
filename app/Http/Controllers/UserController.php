@@ -8,13 +8,23 @@ use GrahamCampbell\ResultType\Success;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Traits\ListingApiTrait;
 
 class UserController extends Controller
 {
-    public function list(){
-        $users = User::all();
+    use ListingApiTrait;
+    public function list(Request $request){
+
+        $this->ListingValidation();
+        $query = User::query();
+        $searchable_fields = ['name','email'];
+        $data = $this->filterSearchPagination($query,$searchable_fields);
+
+        return success('User List',[
+            'users' =>  $data['query']->get(),
+            'count' =>  $data['count'],
+        ]);
         
-        return success('list all users',$users);
     }
 
     public function changePassword(Request $request){

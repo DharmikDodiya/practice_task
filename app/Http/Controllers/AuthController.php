@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Jobs\Report;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -29,7 +31,7 @@ class AuthController extends Controller
         ]);
 
         $user->notify(new WelcomeMessageNotification($user));
-    
+        //Report::dispatch($user)->delay(now()->addSecond());
 
         return success('you Are Register Now,send mail please verify your mail',$user);
     }
