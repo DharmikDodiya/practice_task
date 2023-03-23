@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\SendEmailQueueJob;
 use App\Models\User;
-use GrahamCampbell\ResultType\Success;
+use App\Exports\UsersExport;
+use App\Imports\UsersImport;
 use Illuminate\Http\Request;
+use App\Jobs\SendEmailQueueJob;
+use App\Traits\ListingApiTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Traits\ListingApiTrait;
+use Maatwebsite\Excel\Facades\Excel;
+use GrahamCampbell\ResultType\Success;
+use Maatwebsite\Excel\Exceptions\NoTypeDetectedException;
+//use Excel;
 
 class UserController extends Controller
 {
@@ -58,6 +63,16 @@ class UserController extends Controller
         return success('logged out');
     }
 
+    public function export(Request $request){
+        return Excel::download(new UsersExport,'empty.csv');
+    }
 
-   
+    public function import(Request $request){
+        try {
+            Excel::import(new UsersImport, $request->file('file')->store('temp'));
+            return Success('User Data Imported SuccessFully');
+        } catch (NoTypeDetectedException $e) {
+            return error("Sorry you are using a wrong format to upload files.");
+        }
+    }   
 }

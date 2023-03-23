@@ -131,7 +131,4 @@ class AuthController extends Controller
         }
         return error('your Token Is Expired',type:'notfound');
     }
-
-
-
 }

@@ -35,6 +35,10 @@ Route::middleware(['auth:api'])->group(function(){
         Route::get('/user-Profile',  'userProfile');
         Route::post('/change-Password',  'changePassword');
         Route::get('/logout','logout');
+        Route::get('users-export',[UserController::class,'export']);
     });
    
 });
+
+
+Route::post('users-import',[UserController::class,'import']);
